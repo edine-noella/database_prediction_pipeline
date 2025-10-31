@@ -35,3 +35,13 @@ CONSTRAINT fk_obs_crop FOREIGN KEY (crop_id) REFERENCES crops(crop_id) ON DELETE
 CONSTRAINT fk_obs_soil FOREIGN KEY (soil_id) REFERENCES soils(soil_id) ON DELETE RESTRICT ON UPDATE CASCADE,
 CONSTRAINT fk_obs_stage FOREIGN KEY (stage_id) REFERENCES seedling_stages(stage_id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+-- Create observation_audit table
+CREATE TABLE IF NOT EXISTS observation_audit (
+audit_id INT AUTO_INCREMENT PRIMARY KEY,
+observation_id INT,
+action ENUM('INSERT','UPDATE','DELETE') NOT NULL,
+action_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+changed_data JSON,
+actor VARCHAR(255)
+;
