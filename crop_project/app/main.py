@@ -19,3 +19,31 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Initialize database connections on startup
+@app.on_event("startup")
+async def startup_event():
+    init_db()
+
+# Include API routes with tags for better organization
+app.include_router(
+    readings.router,
+    prefix="/api",
+    # Remove the tags parameter to hide the base endpoints group
+    # The individual endpoints will still be visible under their respective tags (SQLite/MongoDB)
+)
+
+# Include predictions routes
+app.include_router(
+    predictions.router,
+    prefix="/api",
+    tags=["predictions"]
+)
+
+@app.get("/")
+async def root():
+    return {
+        "message": "Welcome to the Crop Monitoring API",
+        "docs": "/docs",
+        "redoc": "/redoc"
+    }
